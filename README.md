@@ -1,13 +1,21 @@
 # Foodshow: Share your [Vagrant](http://vagrantup.com) virtual machine
 
+[![Code Climate](https://codeclimate.com/github/express42/vagrant-foodshow.png)](https://codeclimate.com/github/express42/vagrant-foodshow)
+
 Vagrant-Foodshow plugin allows you to share tcp ports of your virtual machine via the Internet.
 
-With Vagrant You may show your web application to your colleague, present new feature for your customer and give ssh access to your ops guy.
+With this plugin you may show your web application to your colleague, present new feature for your customer and give ssh access to your ops guy.
 
 All tunneling job performed by [Ngrok](http://ngrok.com) backend.
 Ngrok tunnel operates in TCP and HTTP mode. In HTTP tunnel mode ngrok provides access to HTTP requests and server answers, so you can analyze your traffic. TCP mode allows you tunnel any binary protocol like a `ssh` or `postgresql` or whatever you want, but there is no introspection in TCP tunnel.
 
 ## Installation
+
+### Ngrok installation
+
+You should go to [ngrok.com](http://ngrok.com) and download ngrok binary for your system. By default vagrant-foodshow will search ngrok binary at `~/bin/ngrok`. You must place binary into *bin* directory in your home folder. To change default location you must set `foodshow.ngrok_bin` option (See [Advanced tunnel example](#advanced-tunnel-example)).
+
+### Plugin installation
 
 To install this plugin just execute:
 
@@ -65,6 +73,9 @@ end
 Vagrant.configure("2") do |config|
   #Enable foodshow
   config.foodshow.enabled = true
+  # Change ngrok binary location
+  config.foodshow.ngrok_bin = "/usr/local/bin/ngrok"
+  # Automaticly search ssh port and create tcp tunnel
   config.foodshow.forward_ssh = true
   ...
   # Define vms
