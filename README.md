@@ -7,7 +7,7 @@ Vagrant-Foodshow plugin allows you to share tcp ports of your virtual machine vi
 With this plugin you may show your web application to your colleague, present new feature for your customer and give ssh access to your ops guy.
 
 All tunneling job performed by [Ngrok](http://ngrok.com) backend.
-Ngrok tunnel operates in TCP and HTTP mode. In HTTP tunnel mode ngrok provides access to HTTP requests and server answers, so you can analyze your traffic. TCP mode allows you tunnel any binary protocol like a `ssh` or `postgresql` or whatever you want, but there is no introspection in TCP tunnel.
+Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode `ngrok` provides access to HTTP requests and response from server to help you analyze the traffic. In TCP mode you can tunnel any binary protocol like `ssh`, `postgresql` or whatever you want, but there is no introspection in TCP tunnel.
 
 ## Installation
 
