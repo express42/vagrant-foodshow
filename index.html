@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Vagrant-foodshow : Vagrant plugin for ngrok" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Vagrant-foodshow</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/express42/vagrant-foodshow">View on GitHub</a>
+
+          <h1 id="project_title">Vagrant-foodshow</h1>
+          <h2 id="project_tagline">Vagrant plugin for ngrok</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/express42/vagrant-foodshow/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/express42/vagrant-foodshow/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="foodshow-share-your-vagrant-virtual-machine" class="anchor" href="#foodshow-share-your-vagrant-virtual-machine"><span class="octicon octicon-link"></span></a>Foodshow: Share your <a href="http://vagrantup.com">Vagrant</a> virtual machine</h1>
+
+<p><a href="https://codeclimate.com/github/express42/vagrant-foodshow"><img src="https://codeclimate.com/github/express42/vagrant-foodshow.png" alt="Code Climate"></a></p>
+
+<p>Vagrant-Foodshow plugin allows you to share tcp ports of your virtual machine via the Internet.</p>
+
+<p>With this plugin you may show your web application to your colleague, present new feature for your customer and give ssh access to your ops guy.</p>
+
+<p>All tunneling job performed by <a href="http://ngrok.com">Ngrok</a> backend.
+Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode <code>ngrok</code> provides access to HTTP requests and response from server to help you analyze the traffic. In TCP mode you can tunnel any binary protocol like <code>ssh</code>, <code>postgresql</code> or whatever you want, but there is no introspection in TCP tunnel.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<h3>
+<a name="ngrok-installation" class="anchor" href="#ngrok-installation"><span class="octicon octicon-link"></span></a>Ngrok installation</h3>
+
+<p>You should go to <a href="http://ngrok.com">ngrok.com</a> and download ngrok binary for your system. By default vagrant-foodshow will search ngrok binary at <code>~/bin/ngrok</code>. You must place binary into <em>bin</em> directory in your home folder. To change default location you must set <code>foodshow.ngrok_bin</code> option (See <a href="#advanced-tunnel-example">Advanced tunnel example</a>).</p>
+
+<h3>
+<a name="plugin-installation" class="anchor" href="#plugin-installation"><span class="octicon octicon-link"></span></a>Plugin installation</h3>
+
+<p>To install this plugin just execute:</p>
+
+<div class="highlight highlight-bash"><pre>vagrant plugin install vagrant-foodshow
+</pre></div>
+
+<h2>
+<a name="usageconfiguration" class="anchor" href="#usageconfiguration"><span class="octicon octicon-link"></span></a>Usage&amp;Configuration</h2>
+
+<p>First of all you should enable plugin in your <code>Vagrantfile</code>:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">config</span><span class="o">.</span><span class="n">foodshow</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">true</span>
+</pre></div>
+
+<h3>
+<a name="there-are-two-ways-to-create-a-tunnel" class="anchor" href="#there-are-two-ways-to-create-a-tunnel"><span class="octicon octicon-link"></span></a>There are two ways to create a tunnel</h3>
+
+<h5>
+<a name="call-method-foodshowtunnel-" class="anchor" href="#call-method-foodshowtunnel-"><span class="octicon octicon-link"></span></a>Call method <code>foodshow.tunnel</code> :</h5>
+
+<div class="highlight highlight-ruby"><pre><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="n">config</span><span class="o">.</span><span class="n">foodshow</span><span class="o">.</span><span class="n">tunnel</span> <span class="o">&lt;</span><span class="n">host_port</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">protocol</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">[</span><span class="n">options</span> <span class="nb">hash</span><span class="o">]</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</pre></div>
+
+<h5>
+<a name="add-ngrok_proto-parameter-to-vmnetwork-" class="anchor" href="#add-ngrok_proto-parameter-to-vmnetwork-"><span class="octicon octicon-link"></span></a>Add <code>ngrok_proto</code> parameter to <code>vm.network</code> :</h5>
+
+<div class="highlight highlight-ruby"><pre><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">guest_port</span><span class="o">&gt;</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">host_port</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">ngrok_proto</span><span class="p">:</span> <span class="s2">"&lt;protocol&gt;"</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</pre></div>
+
+<p>Default tunnel protocol is <code>http+https</code>. Ngrok supports <code>http</code>, <code>https</code>, <code>http+https</code> and <code>tcp</code>. For tcp protocol authtoken is required.</p>
+
+<h3>
+<a name="simple-tunnel-example" class="anchor" href="#simple-tunnel-example"><span class="octicon octicon-link"></span></a>Simple tunnel example</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="s2">"2"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="c1">#Enable foodshow</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">foodshow</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="c1"># Define vm</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">define</span> <span class="ss">:web01</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+    <span class="c1">#Just add ngrok_proto parameter to your port forwarding entry</span>
+    <span class="n">conf</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="mi">8080</span><span class="p">,</span> <span class="n">ngrok_proto</span><span class="p">:</span> <span class="s2">"http+https"</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+<h3>
+<a name="advanced-tunnel-example" class="anchor" href="#advanced-tunnel-example"><span class="octicon octicon-link"></span></a>Advanced tunnel example</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="s2">"2"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="c1">#Enable foodshow</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">foodshow</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="c1"># Change ngrok binary location</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">foodshow</span><span class="o">.</span><span class="n">ngrok_bin</span> <span class="o">=</span> <span class="s2">"/usr/local/bin/ngrok"</span>
+  <span class="c1"># Automaticly search ssh port and create tcp tunnel</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">foodshow</span><span class="o">.</span><span class="n">forward_ssh</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="c1"># Define vms</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">define</span> <span class="ss">:web01</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+    <span class="n">conf</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="mi">8080</span><span class="p">,</span> <span class="n">ngrok_proto</span><span class="p">:</span> <span class="s2">"http+https"</span>
+    <span class="c1"># Don't tunnel ssh for this vm</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">foodshow</span><span class="o">.</span><span class="n">forward_ssh</span> <span class="o">=</span> <span class="kp">false</span>
+    <span class="c1"># For this vm we use another token</span>
+    <span class="n">conf</span><span class="o">.</span><span class="n">foodshow</span><span class="o">.</span><span class="n">authtoken</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">sometoken_2</span><span class="o">&gt;</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="k">end</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">define</span> <span class="ss">:web02</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+    <span class="n">conf</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="mi">8081</span>
+    <span class="n">conf</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="mi">389</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="mi">3389</span>
+    <span class="c1"># You may pass some params as tunnel options</span>
+    <span class="c1"># This code creates a tunnel http://mycopmanyllc.ngrok.com with basic auth</span>
+    <span class="n">conf</span><span class="o">.</span><span class="n">foodshow</span><span class="o">.</span><span class="n">tunnel</span> <span class="mi">8081</span><span class="p">,</span> <span class="s2">"http"</span><span class="p">,</span> <span class="ss">:httpauth</span> <span class="o">=&gt;</span> <span class="s2">"foodshow:ngrok"</span> <span class="ss">:subdomain</span> <span class="o">=&gt;</span> <span class="s2">"mycopmanyllc"</span>
+    <span class="c1"># And sure you may tunnel any tcp port</span>
+    <span class="n">conf</span><span class="o">.</span><span class="n">foodshow</span><span class="o">.</span><span class="n">tunnel</span> <span class="mi">3389</span><span class="p">,</span> <span class="s2">"tcp"</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+<h3>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h3>
+
+<ul>
+<li>Scope <em>config</em> means that this option can be set only via <code>foodshow.&lt;options&gt;</code>
+</li>
+<li>Scope <em>config+tunnel</em> means that this option can be set via <code>foodshow.&lt;options&gt;</code> and can be can be passed to the <code>foodshow.tunnel</code> method as options hash.</li>
+<li>Scope <em>tunnel</em> means that this option can be passed to the <code>foodshow.tunnel</code> method</li>
+</ul><table>
+<thead><tr>
+<th>Option</th>
+<th>Default</th>
+<th>Scope</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td><code>false</code></td>
+<td>config</td>
+<td>Enable foodshow plugin</td>
+</tr>
+<tr>
+<td><code>ngrok_bin</code></td>
+<td><code>~/bin/ngrok</code></td>
+<td>config+tunnel</td>
+<td>Ngrok binary location (you should put a binary file at this location)</td>
+</tr>
+<tr>
+<td><code>forward_ssh</code></td>
+<td><code>false</code></td>
+<td>config</td>
+<td>Automatically search and forward vagrant ssh guest port (authtoken required)</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>10</code></td>
+<td>config</td>
+<td>Max waiting time for establishing tunnel</td>
+</tr>
+<tr>
+<td><code>authtoken</code></td>
+<td><code>nil</code></td>
+<td>config+tunnel</td>
+<td>Auth token. Required for TCP tunnels and some functions (Go to <a href="http://ngrok.com">ngrok.com</a> to get authkey)</td>
+</tr>
+<tr>
+<td><code>httpauth</code></td>
+<td><code>nil</code></td>
+<td>config+tunnel</td>
+<td>You may set basic auth for http/https tunnel. Format: <code>user:password</code>
+</td>
+</tr>
+<tr>
+<td><code>subdomain</code></td>
+<td><code>nil</code></td>
+<td>config+tunnel</td>
+<td>Custom subdomain for http/https tunnel. URL will be like a http://&lt;subdomain&gt;.ngrok.com</td>
+</tr>
+<tr>
+<td><code>hostname</code></td>
+<td><code>nil</code></td>
+<td>config+tunnel</td>
+<td>Custom domain for http/https tunnel (Paid feature, see <a href="http://ngrok.com/features">Pricing &amp; Features</a> on ngrok website )</td>
+</tr>
+<tr>
+<td><code>host_ip</code></td>
+<td><code>127.0.0.1</code></td>
+<td>tunnel</td>
+<td>Custom destination ip for tunnel</td>
+</tr>
+<tr>
+<td><code>inspect_addr</code></td>
+<td><code>127.0.0.1</code></td>
+<td>config</td>
+<td>Address for traffic inspection</td>
+</tr>
+<tr>
+<td><code>inspect_pbase</code></td>
+<td><code>4040</code></td>
+<td>config</td>
+<td>Base port for traffic inspection, other ngrok  processes will use the next available port</td>
+</tr>
+</tbody>
+</table><h1>
+<a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h1>
+
+<ul>
+<li>Nikita Borzykh (<a href="mailto:sample.n@gmail.com">sample.n@gmail.com</a>)</li>
+</ul><h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ol>
+<li>Fork it ( <a href="http://github.com/express42/vagrant-foodshow/fork">http://github.com/express42/vagrant-foodshow/fork</a> )</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Vagrant-foodshow maintained by <a href="https://github.com/express42">express42</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
