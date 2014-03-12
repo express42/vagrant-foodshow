@@ -80,7 +80,11 @@ module VagrantPlugins
                 end
 
                 if stdout_str.include? "[EROR]"
-                  return 1, stdout_str, debug_output
+                  if stdout_str.include? "Error while checking for update"
+                    next
+                  else
+                    return 1, stdout_str, debug_output
+                  end
                 end
               end
             end
