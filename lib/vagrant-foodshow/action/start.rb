@@ -10,13 +10,19 @@ module VagrantPlugins
           @app.call(env)
 
           return unless env[:machine].config.foodshow.enabled?
-          env[:machine].config.vm.networks.each do |network|
-            if network[0] == :forwarded_port
-              if network[1][:ngrok_proto] or (network[1][:id] == "ssh" && env[:machine].config.foodshow.forward_ssh?)
 
-                if network[1][:id] == "ssh"
-                  network[1][:ngrok_proto] = "tcp"
-                end
+          if env[:machine].config.foodshow.forward_ssh?
+            env[:machine].config.foodshow.tunnel(
+                                                  env[:machine].ssh_info[:port],
+                                                  "tcp",
+                                                  :host => env[:machine].ssh_info[:host]
+                                                )
+          end
+
+          env[:machine].config.vm.networks.each do |network|
+
+            if network[0] == :forwarded_port
+              if network[1][:ngrok_proto]
 
                 if network[1][:protocol] != "tcp"
                   env[:ui].error "Can't tunnel port #{network[1][:host]}, only tcp protocol supported. Skipping."
