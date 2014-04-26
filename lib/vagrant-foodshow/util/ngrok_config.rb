@@ -35,9 +35,15 @@ module VagrantPlugins
           end
           config.merge!(tunnel)
 
-          config[:config]   = (env[:tmp_path] || "/tmp") + ("ngrok-" + env[:machine].id + "-" + config[:port].to_s + ".cfg")
-          config[:log_file] = (env[:tmp_path] || "/tmp") + ("ngrok-" + env[:machine].id + "-" + config[:port].to_s + ".log")
-          config[:pid_file] = (env[:tmp_path] || "/tmp") + ("ngrok-" + env[:machine].id + "-" + config[:port].to_s + ".pid")
+          if env[:machine].provider_name.to_s().start_with?('vmware')
+            machine_id = env[:machine].id.match(/\h+\-\h+\-\h+\-\h+\-\h+/)[0]
+          else
+            machine_id = env[:machine].id
+          end
+
+          config[:config]   = (env[:tmp_path] || "/tmp") + ("ngrok-" + machine_id + "-" + config[:port].to_s + ".cfg")
+          config[:log_file] = (env[:tmp_path] || "/tmp") + ("ngrok-" + machine_id + "-" + config[:port].to_s + ".log")
+          config[:pid_file] = (env[:tmp_path] || "/tmp") + ("ngrok-" + machine_id + "-" + config[:port].to_s + ".pid")
           config
         end
       end
