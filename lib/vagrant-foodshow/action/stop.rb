@@ -8,7 +8,8 @@ module VagrantPlugins
 
         def call(env)
 
-          Dir.glob("#{env[:tmp_path] || '/tmp'}/ngrok-#{env[:machine].id}-*.pid") do |pid_file|
+          machine_id = VagrantPlugins::Foodshow::Util::NgrokConfig.get_machine_id(env)
+          Dir.glob("#{env[:tmp_path] || '/tmp'}/ngrok-#{machine_id}-*.pid") do |pid_file|
             ::File.open(pid_file, "r") do |f|
               begin
                 pid = f.readline().to_i

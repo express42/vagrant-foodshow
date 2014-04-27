@@ -16,6 +16,14 @@ module VagrantPlugins
           cmd = cmd + " " + host + ":" + port.to_s
         end
 
+        def self.get_machine_id(env)
+          if env[:machine].provider_name.to_s().start_with?('vmware')
+            machine_id = env[:machine].id.match(/\h+\-\h+\-\h+\-\h+\-\h+/)[0]
+          else
+            machine_id = env[:machine].id
+          end
+        end
+
         def self.merge_config(env, tunnel)
           config = {}
           foodshow_config = env[:machine].config.foodshow
@@ -35,11 +43,7 @@ module VagrantPlugins
           end
           config.merge!(tunnel)
 
-          if env[:machine].provider_name.to_s().start_with?('vmware')
-            machine_id = env[:machine].id.match(/\h+\-\h+\-\h+\-\h+\-\h+/)[0]
-          else
-            machine_id = env[:machine].id
-          end
+          machine_id = get_machine_id(env)
 
           config[:config]   = (env[:tmp_path] || "/tmp") + ("ngrok-" + machine_id + "-" + config[:port].to_s + ".cfg")
           config[:log_file] = (env[:tmp_path] || "/tmp") + ("ngrok-" + machine_id + "-" + config[:port].to_s + ".log")
