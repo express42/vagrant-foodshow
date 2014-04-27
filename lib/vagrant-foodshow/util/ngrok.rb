@@ -13,7 +13,11 @@ module VagrantPlugins
             @@counter = 0
           end
 
-          config        = VagrantPlugins::Foodshow::Util::NgrokConfig.merge_config(env, tunnel)
+          config = VagrantPlugins::Foodshow::Util::NgrokConfig.merge_config(env, tunnel)
+
+          trust_host_root_certs = config.delete(:trust_host_root_certs)
+          server_addr           = config.delete(:server_addr)
+
           timeout       = config.delete(:timeout)
           log_file      = config.delete(:log_file)
           pid_file      = config.delete(:pid_file)
@@ -35,6 +39,14 @@ module VagrantPlugins
           ::File.open(config_file, "w") do |conf_h|
 
             conf_h.write("inspect_addr: #{inspect_addr.to_s}:#{inspect_pbase.to_i + @@counter}\n")
+
+            if server_addr
+              conf_h.write("server_addr: #{server_addr}\n")
+            end
+
+            if trust_host_root_certs == true
+              conf_h.write("trust_host_root_certs: true\n")
+            end
 
             if authtoken
               conf_h.write("auth_token: #{authtoken}\n")

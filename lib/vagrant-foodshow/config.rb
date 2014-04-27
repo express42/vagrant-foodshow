@@ -2,6 +2,9 @@ module VagrantPlugins
   module Foodshow
     class Config < Vagrant.plugin(2, :config)
 
+      attr_accessor :server_addr
+      attr_accessor :trust_host_root_certs
+
       attr_accessor :timeout
       attr_accessor :enabled
       attr_accessor :forward_ssh
@@ -30,6 +33,10 @@ module VagrantPlugins
         @hostname     = UNSET_VALUE
         @httpauth     = UNSET_VALUE
         @subdomain    = UNSET_VALUE
+
+        # Options for self-hosted ngrokd
+        @server_addr           = UNSET_VALUE
+        @trust_host_root_certs = UNSET_VALUE
       end
 
       def tunnel(port, proto = "http+https", options={})
@@ -81,6 +88,9 @@ module VagrantPlugins
 
       def finalize!
         @ngrok_bin = ::File.expand_path('~/bin/ngrok') if @ngrok_bin == UNSET_VALUE
+
+        @trust_host_root_certs = nil if @trust_host_root_certs == UNSET_VALUE
+        @server_addr           = nil if @server_addr           == UNSET_VALUE
 
         @enabled       = false            if @enabled      == UNSET_VALUE
         @forward_ssh   = false            if @forward_ssh  == UNSET_VALUE
