@@ -101,6 +101,28 @@ Vagrant.configure("2") do |config|
   end
 end
 ```
+
+### Self-hosted tunnel example
+
+```ruby
+Vagrant.configure("2") do |config|
+  #Enable foodshow
+  config.foodshow.enabled = true
+  # Set your ngrokd server
+  config.foodshow.server_addr = "127.0.0.1:4443"
+  # Allow host root certificate
+  config.foodshow.trust_host_root_certs = true
+  ...
+  # Define vm
+  config.vm.define :web01 do |conf|
+    ...
+    #Just add ngrok_proto parameter to your port forwarding entry
+    conf.vm.network :forwarded_port, guest: 80, host: 8080, ngrok_proto: "http+https"
+    ...
+    end
+end
+```
+Read this document if you want to start self-hosted server https://github.com/inconshreveable/ngrok/blob/master/docs/SELFHOSTING.md
 ### Options
 
 - Scope *config* means that this option can be set only via `foodshow.<options>`
@@ -120,6 +142,8 @@ Option | Default | Scope | Purpose
 `host_ip` | `127.0.0.1` | tunnel | Custom destination ip for tunnel
 `inspect_addr` | `127.0.0.1` | config | Address for traffic inspection
 `inspect_pbase` | `4040` | config | Base port for traffic inspection, other ngrok  processes will use the next available port
+`server_addr` | `nil` | config+tunnel | Server address for self-hosted ngrokd, see [Self-hosted tunnels example](#self-hosted-tunnel-example)
+`trust_host_root_certs` | `nil` | config+tunnel | Allow ngrok accept root server certificate. Must be `true` if you using self-hosted ngrokd
 
 # Authors
 
