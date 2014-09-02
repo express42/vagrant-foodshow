@@ -7,5 +7,6 @@ group :development do
 end
 
 group :plugins do
+  gem "vagrant-parallels", :git => "https://github.com/Parallels/vagrant-parallels"
   gemspec
 end
