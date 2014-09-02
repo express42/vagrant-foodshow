@@ -13,7 +13,7 @@ Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode `ngrok` prov
 
 ### Ngrok installation
 
-You should go to [ngrok.com](http://ngrok.com) and download ngrok binary for your system. By default vagrant-foodshow will search ngrok binary at `~/bin/ngrok`. You must place binary into *bin* directory in your home folder. To change default location you must set `foodshow.ngrok_bin` option (See [Advanced tunnel example](#advanced-tunnel-example)).
+You should go to [ngrok.com](http://ngrok.com) and download ngrok binary for your system. Vagrant-foodshow will search ngrok binary in PATH. `~/bin/ngrok` will be used if no ngrok binary in PATH. To disable search you may set `foodshow.ngrok_bin` option (See [Advanced tunnel example](#advanced-tunnel-example)).
 
 ### Plugin installation
 
@@ -132,7 +132,7 @@ Read this document if you want to start self-hosted server https://github.com/in
 Option | Default | Scope | Purpose
 -------|---------|---------|--------
 `enabled` | `false` |  config | Enable foodshow plugin
-`ngrok_bin` | `~/bin/ngrok` | config+tunnel |  Ngrok binary location (you should put a binary file at this location)
+`ngrok_bin` | `nil` | config+tunnel |  By default vagrant-foodshow will search ngrok binary in PATH, then at ~/bin/ngrok. You may override this behavior by setting this option
 `forward_ssh` | `false` | config | Automatically search and forward vagrant ssh guest port (authtoken required)
 `timeout` | `10` | config | Max waiting time for establishing tunnel
 `authtoken` | `nil` | config+tunnel | Auth token. Required for TCP tunnels and some functions (Go to [ngrok.com](http://ngrok.com) to get authkey)
