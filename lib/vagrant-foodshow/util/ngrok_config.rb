@@ -4,6 +4,19 @@ module VagrantPlugins
       class NgrokConfig
         NGROK_ALLOWED_OPTIONS = %w(authtoken hostname httpauth proto subdomain host port server_addr trust_host_root_certs)
 
+        def self.where_ngrok
+          cmd = 'ngrok'
+          exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+          ENV['PATH'].split(::File::PATH_SEPARATOR).each do |path|
+            exts.each { |ext|
+              exe = ::File.join(path, "#{cmd}#{ext}")
+              return exe if ::File.executable?(exe) && !File.directory?(exe)
+            }
+          end
+          return ::File.expand_path('~/bin/ngrok') if ::File.executable?(::File.expand_path('~/bin/ngrok'))
+          return VagrantPlugins::Foodshow::Config::UNSET_VALUE
+        end
+
         def self.build_cmd(config)
           cmd  = config.delete(:ngrok_bin) + " -log=stdout"
           host = config.delete(:host)

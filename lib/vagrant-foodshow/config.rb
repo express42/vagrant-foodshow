@@ -58,13 +58,14 @@ module VagrantPlugins
 
       def validate(machine)
         errors = _detected_errors
-        unless ::File.executable? @ngrok_bin
-          errors << "You must put ngrok binary to #{@ngrok_bin}.\n"\
-                    "  Go to http://ngrok.com and download ngrok binary.\n"\
-                    "  You can change binary location by changing option foodshow.ngrok_bin.\n\n"\
-                    "  EXAMPLE. Download and unpack ngrok to ~/bin on Mac OS x86_64:\n"\
-                    "  curl -O https://dl.ngrok.com/darwin_amd64/ngrok.zip && unzip ngrok.zip && mkdir -p ~/bin && mv ngrok ~/bin\n\n"\
-                    "  You can read docs at http://github.com/express42/vagrant-foodshow\n"
+        if @ngrok_bin == UNSET_VALUE
+          errors << "Ngrok binary not found!\n"\
+                    "  Make sure you have downloaded ngrok binary from http://ngrok.com\n"\
+                    "  You can do this:\n"\
+                    "  1) Add directory with ngrok binary your PATH\n"\
+                    "  2) Aut ngrok binary in ~/bin/ngrok\n"\
+                    "  3) Set ngrok binary location with option foodshow.ngrok_bin in your vagrant file\n\n"\
+                    "  You can read docs at http://github.com/express42/vagrant-foodshow"
         end
 
         unless @authtoken
@@ -87,7 +88,7 @@ module VagrantPlugins
       end
 
       def finalize!
-        @ngrok_bin = ::File.expand_path('~/bin/ngrok') if @ngrok_bin == UNSET_VALUE
+        @ngrok_bin = VagrantPlugins::Foodshow::Util::NgrokConfig.where_ngrok if @ngrok_bin == UNSET_VALUE
 
         @trust_host_root_certs = nil if @trust_host_root_certs == UNSET_VALUE
         @server_addr           = nil if @server_addr           == UNSET_VALUE
