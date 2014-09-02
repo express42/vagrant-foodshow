@@ -63,7 +63,7 @@ module VagrantPlugins
                     "  Make sure you have downloaded ngrok binary from http://ngrok.com\n"\
                     "  You can do this:\n"\
                     "  1) Add directory with ngrok binary your PATH\n"\
-                    "  2) Aut ngrok binary in ~/bin/ngrok\n"\
+                    "  2) Add ngrok binary in ~/bin/ngrok\n"\
                     "  3) Set ngrok binary location with option foodshow.ngrok_bin in your vagrant file\n\n"\
                     "  You can read docs at http://github.com/express42/vagrant-foodshow"
         end
