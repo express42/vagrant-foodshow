@@ -44,7 +44,7 @@ Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode <code>ngrok<
 <h3>
 <a name="ngrok-installation" class="anchor" href="#ngrok-installation"><span class="octicon octicon-link"></span></a>Ngrok installation</h3>
 
-<p>You should go to <a href="http://ngrok.com">ngrok.com</a> and download ngrok binary for your system. By default vagrant-foodshow will search ngrok binary at <code>~/bin/ngrok</code>. You must place binary into <em>bin</em> directory in your home folder. To change default location you must set <code>foodshow.ngrok_bin</code> option (See <a href="#advanced-tunnel-example">Advanced tunnel example</a>).</p>
+<p>You should go to <a href="http://ngrok.com">ngrok.com</a> and download ngrok binary for your system. Vagrant-foodshow will search ngrok binary in PATH. <code>~/bin/ngrok</code> will be used if no ngrok binary in PATH. To disable search you may set <code>foodshow.ngrok_bin</code> option (See <a href="#advanced-tunnel-example">Advanced tunnel example</a>).</p>
 
 <h3>
 <a name="plugin-installation" class="anchor" href="#plugin-installation"><span class="octicon octicon-link"></span></a>Plugin installation</h3>
