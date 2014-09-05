@@ -2,9 +2,9 @@
 <html>
 
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Vagrant-foodshow : Vagrant plugin for ngrok" />
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Vagrant-foodshow : Vagrant plugin for ngrok">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -20,6 +20,11 @@
 
           <h1 id="project_title">Vagrant-foodshow</h1>
           <h2 id="project_tagline">Vagrant plugin for ngrok</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/express42/vagrant-foodshow/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/express42/vagrant-foodshow/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
     </div>
 
@@ -44,7 +49,7 @@ Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode <code>ngrok<
 <h3>
 <a name="ngrok-installation" class="anchor" href="#ngrok-installation"><span class="octicon octicon-link"></span></a>Ngrok installation</h3>
 
-<p>You should go to <a href="http://ngrok.com">ngrok.com</a> and download ngrok binary for your system. Vagrant-foodshow will search ngrok binary in PATH. <code>~/bin/ngrok</code> will be used if no ngrok binary in PATH. To disable search you may set <code>foodshow.ngrok_bin</code> option (See <a href="#advanced-tunnel-example">Advanced tunnel example</a>).</p>
+<p>You should go to <a href="http://ngrok.com">ngrok.com</a> and download ngrok binary for your system. By default vagrant-foodshow will search ngrok binary at <code>~/bin/ngrok</code>. You must place binary into <em>bin</em> directory in your home folder. To change default location you must set <code>foodshow.ngrok_bin</code> option (See <a href="#advanced-tunnel-example">Advanced tunnel example</a>).</p>
 
 <h3>
 <a name="plugin-installation" class="anchor" href="#plugin-installation"><span class="octicon octicon-link"></span></a>Plugin installation</h3>
@@ -77,7 +82,7 @@ Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode <code>ngrok<
 <a name="add-ngrok_proto-parameter-to-vmnetwork-" class="anchor" href="#add-ngrok_proto-parameter-to-vmnetwork-"><span class="octicon octicon-link"></span></a>Add <code>ngrok_proto</code> parameter to <code>vm.network</code> :</h5>
 
 <div class="highlight highlight-ruby"><pre><span class="o">.</span><span class="n">.</span><span class="o">.</span>
-<span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">guest_port</span><span class="o">&gt;</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">host_port</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">ngrok_proto</span><span class="p">:</span> <span class="s2">"&lt;protocol&gt;"</span>
+<span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">guest_port</span><span class="o">&gt;</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">host_port</span><span class="o">&gt;</span><span class="p">,</span> <span class="ss">ngrok_proto</span><span class="p">:</span> <span class="s2">"&lt;protocol&gt;"</span>
 <span class="o">.</span><span class="n">.</span><span class="o">.</span>
 </pre></div>
 
@@ -94,7 +99,7 @@ Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode <code>ngrok<
   <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">define</span> <span class="ss">:web01</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
     <span class="o">.</span><span class="n">.</span><span class="o">.</span>
     <span class="c1">#Just add ngrok_proto parameter to your port forwarding entry</span>
-    <span class="n">conf</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="mi">8080</span><span class="p">,</span> <span class="n">ngrok_proto</span><span class="p">:</span> <span class="s2">"http+https"</span>
+    <span class="n">conf</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="mi">8080</span><span class="p">,</span> <span class="ss">ngrok_proto</span><span class="p">:</span> <span class="s2">"http+https"</span>
     <span class="o">.</span><span class="n">.</span><span class="o">.</span>
     <span class="k">end</span>
 <span class="k">end</span>
@@ -114,7 +119,7 @@ Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode <code>ngrok<
   <span class="c1"># Define vms</span>
   <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">define</span> <span class="ss">:web01</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
     <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-    <span class="n">conf</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="mi">8080</span><span class="p">,</span> <span class="n">ngrok_proto</span><span class="p">:</span> <span class="s2">"http+https"</span>
+    <span class="n">conf</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="mi">8080</span><span class="p">,</span> <span class="ss">ngrok_proto</span><span class="p">:</span> <span class="s2">"http+https"</span>
     <span class="c1"># Don't tunnel ssh for this vm</span>
     <span class="n">config</span><span class="o">.</span><span class="n">foodshow</span><span class="o">.</span><span class="n">forward_ssh</span> <span class="o">=</span> <span class="kp">false</span>
     <span class="c1"># For this vm we use another token</span>
@@ -150,7 +155,7 @@ Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode <code>ngrok<
   <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">define</span> <span class="ss">:web01</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
     <span class="o">.</span><span class="n">.</span><span class="o">.</span>
     <span class="c1">#Just add ngrok_proto parameter to your port forwarding entry</span>
-    <span class="n">conf</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="mi">8080</span><span class="p">,</span> <span class="n">ngrok_proto</span><span class="p">:</span> <span class="s2">"http+https"</span>
+    <span class="n">conf</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="ss">:forwarded_port</span><span class="p">,</span> <span class="ss">guest</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="ss">host</span><span class="p">:</span> <span class="mi">8080</span><span class="p">,</span> <span class="ss">ngrok_proto</span><span class="p">:</span> <span class="s2">"http+https"</span>
     <span class="o">.</span><span class="n">.</span><span class="o">.</span>
     <span class="k">end</span>
 <span class="k">end</span>
