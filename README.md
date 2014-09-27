@@ -9,6 +9,10 @@ With this plugin you may show your web application to your colleague, present ne
 All tunneling job performed by [Ngrok](http://ngrok.com) backend.
 Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode `ngrok` provides access to HTTP requests and response from server to help you analyze the traffic. In TCP mode you can tunnel any binary protocol like `ssh`, `postgresql` or whatever you want, but there is no introspection in TCP tunnel.
 
+## Vagrant-foodshow and vagrant-share
+
+Vagrant-foodshow unlike vagrnat-share an opensource product. Ngrok client and server part is also opensource. Ngrok server and server-side part of vagrant-share both available as SAAS solutions, but you can setup your own ngrok server for free. This is a good solution if you don't want send tunneled traffic through third-party servers.
+
 ## Installation
 
 ### Ngrok installation
