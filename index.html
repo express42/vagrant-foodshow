@@ -20,6 +20,11 @@
 
           <h1 id="project_title">Vagrant-foodshow</h1>
           <h2 id="project_tagline">Vagrant plugin for ngrok</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/express42/vagrant-foodshow/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/express42/vagrant-foodshow/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
     </div>
 
@@ -39,12 +44,17 @@
 Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode <code>ngrok</code> provides access to HTTP requests and response from server to help you analyze the traffic. In TCP mode you can tunnel any binary protocol like <code>ssh</code>, <code>postgresql</code> or whatever you want, but there is no introspection in TCP tunnel.</p>
 
 <h2>
+<a name="vagrant-foodshow-and-vagrant-share" class="anchor" href="#vagrant-foodshow-and-vagrant-share"><span class="octicon octicon-link"></span></a>Vagrant-foodshow and vagrant-share</h2>
+
+<p>Vagrant-foodshow unlike vagrnat-share an opensource product. Ngrok client and server part is also opensource. Ngrok server and server-side part of vagrant-share both available as SAAS solutions, but you can setup your own ngrok server for free. This is a good solution if you don't want send tunneled traffic through third-party servers.</p>
+
+<h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <h3>
 <a name="ngrok-installation" class="anchor" href="#ngrok-installation"><span class="octicon octicon-link"></span></a>Ngrok installation</h3>
 
-<p>You should go to <a href="http://ngrok.com">ngrok.com</a> and download ngrok binary for your system. By default vagrant-foodshow will search ngrok binary at <code>~/bin/ngrok</code>. You must place binary into <em>bin</em> directory in your home folder. To change default location you must set <code>foodshow.ngrok_bin</code> option (See <a href="#advanced-tunnel-example">Advanced tunnel example</a>).</p>
+<p>You should go to <a href="http://ngrok.com">ngrok.com</a> and download ngrok binary for your system. Vagrant-foodshow will search ngrok binary in PATH. <code>~/bin/ngrok</code> will be used if no ngrok binary in PATH. To disable search you may set <code>foodshow.ngrok_bin</code> option (See <a href="#advanced-tunnel-example">Advanced tunnel example</a>).</p>
 
 <h3>
 <a name="plugin-installation" class="anchor" href="#plugin-installation"><span class="octicon octicon-link"></span></a>Plugin installation</h3>
@@ -182,9 +192,9 @@ Ngrok tunnel can operate in TCP and HTTP modes. In HTTP tunnel mode <code>ngrok<
 </tr>
 <tr>
 <td><code>ngrok_bin</code></td>
-<td><code>~/bin/ngrok</code></td>
+<td><code>nil</code></td>
 <td>config+tunnel</td>
-<td>Ngrok binary location (you should put a binary file at this location)</td>
+<td>By default vagrant-foodshow will search ngrok binary in PATH, then at ~/bin/ngrok. You may override this behavior by setting this option</td>
 </tr>
 <tr>
 <td><code>forward_ssh</code></td>
