@@ -1,6 +1,6 @@
 # Foodshow: Share your [Vagrant](http://vagrantup.com) virtual machine
 
-[![Code Climate](https://codeclimate.com/github/express42/vagrant-foodshow.png)](https://codeclimate.com/github/express42/vagrant-foodshow)
+[![Code Climate](https://codeclimate.com/github/express42/vagrant-foodshow.png)](https://codeclimate.com/github/express42/vagrant-foodshow) [![express42/vagrant-foodshow API Documentation](https://www.omniref.com/github/express42/vagrant-foodshow.png)](https://www.omniref.com/github/express42/vagrant-foodshow)
 
 Vagrant-Foodshow plugin allows you to share tcp ports of your virtual machine via the Internet.
 
