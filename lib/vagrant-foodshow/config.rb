@@ -68,7 +68,7 @@ module VagrantPlugins
                     "  You can read docs at http://github.com/express42/vagrant-foodshow"
         end
 
-        unless @authtoken
+        unless @authtoken || @server_addr
           if @subdomain || @forward_ssh || @hostname
             errors << "You should set authtoken if you use subdomain/forward_ssh/hostname options"
           end
