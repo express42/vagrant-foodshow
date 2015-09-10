@@ -144,8 +144,8 @@ Option | Default | Scope | Purpose
 `subdomain` | `nil` | config+tunnel | Custom subdomain for http/https tunnel. URL will be like a http://\<subdomain\>.ngrok.com
 `hostname` | `nil` | config+tunnel | Custom domain for http/https tunnel (Paid feature, see [Pricing & Features](http://ngrok.com/features) on ngrok website )
 `host_ip` | `127.0.0.1` | tunnel | Custom destination ip for tunnel
-`inspect_addr` | `127.0.0.1` | config | Address for traffic inspection
-`inspect_pbase` | `4040` | config | Base port for traffic inspection, other ngrok  processes will use the next available port
+`web_addr` | `127.0.0.1` | config | Address for traffic inspection
+`web_pbase` | `4040` | config | Base port for traffic inspection, other ngrok  processes will use the next available port
 `server_addr` | `nil` | config+tunnel | Server address for self-hosted ngrokd, see [Self-hosted tunnels example](#self-hosted-tunnel-example)
 `trust_host_root_certs` | `nil` | config+tunnel | Allow ngrok accept root server certificate. Must be `true` if you using self-hosted ngrokd
 

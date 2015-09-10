@@ -11,10 +11,10 @@ module VagrantPlugins
 
       attr_accessor :authtoken
       attr_accessor :hostname
-      attr_accessor :httpauth
+      attr_accessor :auth
       attr_accessor :subdomain
-      attr_accessor :inspect_addr
-      attr_accessor :inspect_pbase
+      attr_accessor :web_addr
+      attr_accessor :web_pbase
 
       attr_reader   :tunnels
       attr_reader   :ngrok_bin
@@ -24,14 +24,14 @@ module VagrantPlugins
         @enabled      = UNSET_VALUE
         @timeout      = UNSET_VALUE
         @ngrok_bin    = UNSET_VALUE
-        @inspect_addr = UNSET_VALUE
-        @inspect_port = UNSET_VALUE
+        @web_addr     = UNSET_VALUE
+        @web_port     = UNSET_VALUE
         @tunnels      = []
 
         #ngrok params
         @authtoken    = UNSET_VALUE
         @hostname     = UNSET_VALUE
-        @httpauth     = UNSET_VALUE
+        @auth         = UNSET_VALUE
         @subdomain    = UNSET_VALUE
 
         # Options for self-hosted ngrokd
@@ -41,7 +41,7 @@ module VagrantPlugins
 
       def tunnel(port, proto = "http+https", options={})
         host_hash = {:host => options[:host] || "127.0.0.1"}
-        @tunnels << options.merge(:port => port).merge( :proto => proto).merge(host_hash)
+        @tunnels << options.merge(:port => port).merge(:proto => proto).merge(host_hash)
       end
 
       def forward_ssh?
@@ -98,10 +98,10 @@ module VagrantPlugins
         @timeout       = 10               if @timeout      == UNSET_VALUE
         @authtoken     = nil              if @authtoken    == UNSET_VALUE
         @hostname      = nil              if @hostname     == UNSET_VALUE
-        @httpauth      = nil              if @httpauth     == UNSET_VALUE
+        @auth          = nil              if @auth         == UNSET_VALUE
         @subdomain     = nil              if @subdomain    == UNSET_VALUE
-        @inspect_addr  = "127.0.0.1"      if @inspect_addr == UNSET_VALUE
-        @inspect_pbase = 4040             if @inspect_port == UNSET_VALUE
+        @web_addr      = "127.0.0.1"      if @web_addr     == UNSET_VALUE
+        @web_pbase     = 4040             if @web_port     == UNSET_VALUE
       end
     end
   end

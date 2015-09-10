@@ -21,9 +21,9 @@ module VagrantPlugins
           timeout       = config.delete(:timeout)
           log_file      = config.delete(:log_file)
           pid_file      = config.delete(:pid_file)
-          inspect_addr  = config.delete(:inspect_addr)
+          web_addr      = config.delete(:web_addr)
           authtoken     = config.delete(:authtoken)
-          inspect_pbase = config.delete(:inspect_pbase)
+          web_pbase     = config.delete(:web_pbase)
           config_file   = config[:config]
           
           cmd           = VagrantPlugins::Foodshow::Util::NgrokConfig.build_cmd(config)
@@ -38,7 +38,7 @@ module VagrantPlugins
 
           ::File.open(config_file, "w") do |conf_h|
 
-            conf_h.write("inspect_addr: #{inspect_addr.to_s}:#{inspect_pbase.to_i + @@counter}\n")
+            conf_h.write("web_addr: #{web_addr.to_s}:#{web_pbase.to_i + @@counter}\n")
 
             if server_addr
               conf_h.write("server_addr: #{server_addr}\n")
@@ -49,7 +49,7 @@ module VagrantPlugins
             end
 
             if authtoken
-              conf_h.write("auth_token: #{authtoken}\n")
+              conf_h.write("authtoken: #{authtoken}\n")
             end
 
           end
@@ -87,8 +87,9 @@ module VagrantPlugins
                 end
                 debug_output << stdout_str
 
-                if stdout_str.include? "[INFO] [client] Tunnel established at"
-                  return 0, stdout_str[/(http\:\/\/|https\:\/\/|tcp\:\/\/).+/], debug_output
+                if stdout_str.include? "client session established"
+                  # TODO target url
+                  return 0, "[target url]", debug_output
                 end
 
                 if stdout_str.include? "[EROR]"
