@@ -2,7 +2,7 @@ module VagrantPlugins
   module Foodshow
     module Util
       class NgrokConfig
-        NGROK_ALLOWED_OPTIONS = %w(authtoken hostname httpauth proto subdomain host port server_addr trust_host_root_certs)
+        NGROK_ALLOWED_OPTIONS = %w(authtoken hostname auth proto subdomain host port server_addr trust_host_root_certs)
 
         def self.where_ngrok
           cmd = 'ngrok'
@@ -18,9 +18,22 @@ module VagrantPlugins
         end
 
         def self.build_cmd(config)
-          cmd  = config.delete(:ngrok_bin) + " -log=stdout"
+          cmd  = config.delete(:ngrok_bin)
           host = config.delete(:host)
           port = config.delete(:port)
+          proto = config.delete(:proto)
+
+          case proto
+          when 'http'
+            config['bind-tls'] = 'false'
+          when 'https'
+            config['bind-tls'] = 'true'
+            proto = 'http'
+          when 'http+https', 'https+http'
+            proto = 'http'
+          end
+
+          cmd = cmd + ' ' + proto + ' -log=stdout'
 
           config.each_pair do |opt, val|
             cmd = cmd + " -" + opt.to_s + "=" + val.to_s
@@ -49,10 +62,10 @@ module VagrantPlugins
 
           config[:authtoken]     = foodshow_config.authtoken     if foodshow_config.authtoken
           config[:hostname]      = foodshow_config.hostname      if foodshow_config.hostname
-          config[:httpauth]      = foodshow_config.httpauth      if foodshow_config.httpauth
+          config[:auth]          = foodshow_config.auth          if foodshow_config.auth
           config[:subdomain]     = foodshow_config.subdomain     if foodshow_config.subdomain
-          config[:inspect_addr]  = foodshow_config.inspect_addr  if foodshow_config.inspect_addr
-          config[:inspect_pbase] = foodshow_config.inspect_pbase if foodshow_config.inspect_pbase
+          config[:web_addr]      = foodshow_config.web_addr      if foodshow_config.web_addr
+          config[:web_pbase]     = foodshow_config.web_pbase     if foodshow_config.web_pbase
 
           tunnel.keys.each do |key|
             raise unless NGROK_ALLOWED_OPTIONS.include? key.to_s
