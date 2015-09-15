@@ -133,6 +133,8 @@ Read this document if you want to start self-hosted server https://github.com/in
 - Scope *config+tunnel* means that this option can be set via `foodshow.<options>` and can be can be passed to the `foodshow.tunnel` method as options hash.
 - Scope *tunnel* means that this option can be passed to the `foodshow.tunnel` method
 
+Configuration options for **ngrok v1.x**
+
 Option | Default | Scope | Purpose
 -------|---------|---------|--------
 `enabled` | `false` |  config | Enable foodshow plugin
@@ -144,10 +146,20 @@ Option | Default | Scope | Purpose
 `subdomain` | `nil` | config+tunnel | Custom subdomain for http/https tunnel. URL will be like a http://\<subdomain\>.ngrok.com
 `hostname` | `nil` | config+tunnel | Custom domain for http/https tunnel (Paid feature, see [Pricing & Features](http://ngrok.com/features) on ngrok website )
 `host_ip` | `127.0.0.1` | tunnel | Custom destination ip for tunnel
-`web_addr` | `127.0.0.1` | config | Address for traffic inspection
-`web_pbase` | `4040` | config | Base port for traffic inspection, other ngrok  processes will use the next available port
+`inspect_addr` | `127.0.0.1` | config | Address for traffic inspection
+`inspect_pbase` | `4040` | config | Base port for traffic inspection, other ngrok  processes will use the next available port
 `server_addr` | `nil` | config+tunnel | Server address for self-hosted ngrokd, see [Self-hosted tunnels example](#self-hosted-tunnel-example)
 `trust_host_root_certs` | `nil` | config+tunnel | Allow ngrok accept root server certificate. Must be `true` if you using self-hosted ngrokd
+
+Changes in config options for **ngrok v2.x**
+
+v1.x option | | v2.x option
+------------|-|------------
+httpauth | => | auth
+inspect_addr | => | web_addr
+inspect_pbase | => | web_pbase
+
+> If you are using ngrok v2.x authtoken option could be automatically filled from ngrok configuration
 
 # Authors
 

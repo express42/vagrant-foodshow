@@ -2,7 +2,7 @@ module VagrantPlugins
   module Foodshow
     module Action
       class Start
-        def initialize(app,env)
+        def initialize(app, env)
           @app = app
         end
 
@@ -13,10 +13,10 @@ module VagrantPlugins
 
           if env[:machine].config.foodshow.forward_ssh?
             env[:machine].config.foodshow.tunnel(
-                                                  env[:machine].ssh_info[:port],
-                                                  "tcp",
-                                                  :host => env[:machine].ssh_info[:host]
-                                                )
+                env[:machine].ssh_info[:port],
+                'tcp',
+                :host => env[:machine].ssh_info[:host]
+            )
           end
 
           env[:machine].config.vm.networks.each do |network|
@@ -24,16 +24,16 @@ module VagrantPlugins
             if network[0] == :forwarded_port
               if network[1][:ngrok_proto]
 
-                if network[1][:protocol] != "tcp"
+                if network[1][:protocol] != 'tcp'
                   env[:ui].error "Can't tunnel port #{network[1][:host]}, only tcp protocol supported. Skipping."
                   next
                 end
 
                 env[:machine].config.foodshow.tunnel(
-                                                     network[1][:host],
-                                                     network[1][:ngrok_proto],
-                                                     :host  => network[1][:host_ip] || "127.0.0.1",
-                                                    )
+                    network[1][:host],
+                    network[1][:ngrok_proto],
+                    :host => network[1][:host_ip] || '127.0.0.1',
+                )
               end
             end
           end
@@ -41,12 +41,12 @@ module VagrantPlugins
             status, message, debug_output = VagrantPlugins::Foodshow::Util::Ngrok.start(env, tunnel)
 
             if status == 0
-              env[:ui].success "Tunnel from " + message + " to " + tunnel[:host] + ":" + tunnel[:port].to_s
+              env[:ui].success 'Tunnel from ' + message + ' to ' + tunnel[:host] + ':' + tunnel[:port].to_s
             elsif status == 1
-              env[:ui].error "Ngrok failed: " + message
+              env[:ui].error 'Ngrok failed: ' + message
             elsif status == -1
               env[:ui].error message
-              env[:ui].error "Ngrok output: " + debug_output.join()
+              env[:ui].error 'Ngrok output: ' + debug_output.join
             end
           end
         end

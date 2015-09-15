@@ -1,13 +1,13 @@
-require "vagrant-foodshow/action/start.rb"
-require "vagrant-foodshow/action/stop.rb"
-require "vagrant-foodshow/util/ngrok.rb"
+require 'vagrant-foodshow/action/start.rb'
+require 'vagrant-foodshow/action/stop.rb'
+require 'vagrant-foodshow/util/ngrok.rb'
 
 module VagrantPlugins
   module Foodshow
-    class Plugin < Vagrant.plugin("2")
-      name "foodshow"
+    class Plugin < Vagrant.plugin('2')
+      name 'foodshow'
       config 'foodshow' do
-        require_relative "config"
+        require_relative 'config'
         Config
       end
       action_hook :ngrok_start_handler, :machine_action_up do |hook|
