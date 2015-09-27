@@ -1,5 +1,5 @@
-require "vagrant-foodshow/version"
-require "vagrant-foodshow/plugin"
+require 'vagrant-foodshow/version'
+require 'vagrant-foodshow/plugin'
 module Vagrant
   module Foodshow
   end

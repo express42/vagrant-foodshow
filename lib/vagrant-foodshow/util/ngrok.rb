@@ -1,11 +1,17 @@
+require 'json'
 require 'open3'
 require 'timeout'
-require "vagrant-foodshow/util/ngrok_config.rb"
+require 'vagrant-foodshow/util/ngrok_config.rb'
 
 module VagrantPlugins
   module Foodshow
     module Util
       class Ngrok
+
+        def initialize
+          @ngrok_version_deprecated = VagrantPlugins::Foodshow::Util::NgrokConfig.ngrok_version_deprecated?
+        end
+
         def self.start(env, tunnel)
           if defined?(@@counter)
             @@counter += 1
@@ -16,57 +22,72 @@ module VagrantPlugins
           config = VagrantPlugins::Foodshow::Util::NgrokConfig.merge_config(env, tunnel)
 
           trust_host_root_certs = config.delete(:trust_host_root_certs)
-          server_addr           = config.delete(:server_addr)
+          server_addr = config.delete(:server_addr)
 
-          timeout       = config.delete(:timeout)
-          log_file      = config.delete(:log_file)
-          pid_file      = config.delete(:pid_file)
-          web_addr      = config.delete(:web_addr)
-          authtoken     = config.delete(:authtoken)
-          web_pbase     = config.delete(:web_pbase)
-          config_file   = config[:config]
-          
-          cmd           = VagrantPlugins::Foodshow::Util::NgrokConfig.build_cmd(config)
+          timeout = config.delete(:timeout)
+          log_file = config.delete(:log_file)
+          pid_file = config.delete(:pid_file)
+          authtoken = config.delete(:authtoken)
+
+          inspect_addr = config.delete(:inspect_addr)
+          inspect_pbase = config.delete(:inspect_pbase)
+
+          web_addr = config.delete(:web_addr)
+          web_pbase = config.delete(:web_pbase)
+
+          config_file = config[:config]
+
+          cmd = VagrantPlugins::Foodshow::Util::NgrokConfig.build_cmd(config)
 
           begin
-            current_pid=-1
+            current_pid = -1
             ::File.open(pid_file) { |pid| current_pid = pid.readline(); }
             Process.getpgid(current_pid.to_i)
-            return 0, "Ngrok already running at pid #{current_pid}. Skipping tunnel", ""
+            return 0, "Ngrok already running at pid #{current_pid}. Skipping tunnel", ''
           rescue
+            # ignored
           end
 
-          ::File.open(config_file, "w") do |conf_h|
+          ::File.open(config_file, 'w') do |conf_h|
 
-            conf_h.write("web_addr: #{web_addr.to_s}:#{web_pbase.to_i + @@counter}\n")
+            if @ngrok_version_deprecated
+              conf_h.write("inspect_addr: #{inspect_addr.to_s}:#{inspect_pbase.to_i + @@counter}\n")
+            else
+              conf_h.write("web_addr: #{web_addr.to_s}:#{web_pbase.to_i + @@counter}\n")
+            end
 
             if server_addr
               conf_h.write("server_addr: #{server_addr}\n")
             end
 
-            if trust_host_root_certs == true
+            if trust_host_root_certs
               conf_h.write("trust_host_root_certs: true\n")
             end
 
             if authtoken
-              conf_h.write("authtoken: #{authtoken}\n")
+              if @ngrok_version_deprecated
+                conf_h.write("auth_token: #{authtoken}\n")
+              else
+                conf_h.write("authtoken: #{authtoken}\n")
+              end
             end
 
           end
 
           pid = spawn(cmd, :out => log_file.to_s)
 
-          ::File.open(pid_file, "w") { |pid_h| pid_h.write(pid) }
+          ::File.open(pid_file, 'w') { |pid_h| pid_h.write(pid) }
 
-          log_h = ::File.open(log_file, "r")
+          log_h = ::File.open(log_file, 'r')
           status, message, debug_output = parse_log(log_h, timeout)
           log_h.close
 
           unless status == 0
             begin
               ::File.delete(pid_file)
-              ::Process.kill("TERM", pid)
+              ::Process.kill('TERM', pid)
             rescue
+              # ignored
             end
           end
 
@@ -86,23 +107,32 @@ module VagrantPlugins
                   next
                 end
                 debug_output << stdout_str
-
-                if stdout_str.include? "client session established"
-                  # TODO target url
-                  return 0, "[target url]", debug_output
-                end
-
-                if stdout_str.include? "[EROR]"
-                  if stdout_str.include? "Error while checking for update"
-                    next
-                  else
-                    return 1, stdout_str, debug_output
+                if @ngrok_version_deprecated
+                  if stdout_str.include? '[INFO] [client] Tunnel established at'
+                    return 0, stdout_str[/(http\:\/\/|https\:\/\/|tcp\:\/\/).+/], debug_output
+                  end
+                  if stdout_str.include? '[EROR]'
+                    if stdout_str.include? 'Error while checking for update'
+                      next
+                    else
+                      return 1, stdout_str, debug_output
+                    end
+                  end
+                else
+                  stdout_json = JSON.parse(stdout_str)
+                  if stdout_json.include?('err') && stdout_json['err'] != '<nil>'
+                    return 1, stdout_json['err'], debug_output
+                  end
+                  if stdout_json.include?('msg') && stdout_json['msg'] == 'decoded response'
+                    if stdout_json['resp'].match(/URL:/)
+                      return 0, stdout_json['resp'][/\sURL:(.+?)\s/, 1], debug_output
+                    end
                   end
                 end
               end
             end
           rescue ::Timeout::Error
-            return -1, "Ngrok wait timeout. See ngrok output:", debug_output
+            return -1, 'Ngrok wait timeout. See ngrok output:', debug_output
           end
         end
       end
