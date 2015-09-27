@@ -9,10 +9,10 @@ module VagrantPlugins
       class Ngrok
 
         def initialize
-          @ngrok_version_deprecated = VagrantPlugins::Foodshow::Util::NgrokConfig.ngrok_version_deprecated?
         end
 
         def self.start(env, tunnel)
+          @ngrok_version_deprecated = VagrantPlugins::Foodshow::Util::NgrokConfig.ngrok_version_deprecated?
           if defined?(@@counter)
             @@counter += 1
           else
@@ -97,6 +97,7 @@ module VagrantPlugins
         private
 
         def self.parse_log(log_h, timeout)
+          @ngrok_version_deprecated = VagrantPlugins::Foodshow::Util::NgrokConfig.ngrok_version_deprecated?
           debug_output = []
           begin
             timeout(timeout.to_i) do
