@@ -1,3 +1,5 @@
+require 'vagrant/util/platform'
+
 module VagrantPlugins
   module Foodshow
     module Action
@@ -13,7 +15,9 @@ module VagrantPlugins
             ::File.open(pid_file, 'r') do |f|
               begin
                 pid = f.readline().to_i
-                ::Process.kill('TERM', pid)
+                f.close
+                sigterm = Vagrant::Util::Platform.windows? ? 'KILL' : 'TERM'
+                ::Process.kill(sigterm, pid)
                 ::File.delete(pid_file)
               rescue Errno::ESRCH
                 ::File.delete(pid_file)

@@ -2,6 +2,7 @@ require 'json'
 require 'open3'
 require 'timeout'
 require 'vagrant-foodshow/util/ngrok_config.rb'
+require 'vagrant/util/platform'
 
 module VagrantPlugins
   module Foodshow
@@ -85,7 +86,8 @@ module VagrantPlugins
           unless status == 0
             begin
               ::File.delete(pid_file)
-              ::Process.kill('TERM', pid)
+              sigterm = Vagrant::Util::Platform.windows? ? 'KILL' : 'TERM'
+              ::Process.kill(sigterm, pid)
             rescue
               # ignored
             end
