@@ -35,7 +35,7 @@ module VagrantPlugins
           port = config.delete(:port)
 
           if ngrok_version_deprecated?
-            cmd += ' -log=stdout'
+            cmd += ' --log=stdout'
           else
             proto = config.delete(:proto)
             case proto
@@ -50,11 +50,11 @@ module VagrantPlugins
               else
                 # ignored
             end
-            cmd += ' ' + proto + ' -log=stdout -log-level=debug -log-format=json'
+            cmd += ' ' + proto + ' --log=stdout --log-level=debug --log-format=json'
           end
 
           config.each_pair do |opt, val|
-            cmd += ' -' + opt.to_s + '=' + val.to_s
+            cmd += ' --' + opt.to_s + '=' + val.to_s
           end
 
           cmd += ' ' + host + ':' + port.to_s
